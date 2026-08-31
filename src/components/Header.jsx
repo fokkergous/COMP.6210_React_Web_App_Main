@@ -1,0 +1,26 @@
+import { Link } from 'react-router-dom';
+import logo from '../assets/scp/scp-logo.png';
+
+// Render the site header with branding and clearance information.
+function Header() {
+  return (
+    <header className="site-header">
+      <div className="clearance-bar">
+        <span>LEVEL 3 CLEARANCE REQUIRED</span>
+        <span className="clearance-bar__sep" aria-hidden="true">·</span>
+        <span>FIELD CATALOGUE — MOBILE ACCESS ENABLED</span>
+      </div>
+      <div className="site-header__row">
+        <Link to="/" className="brand">
+          <img src={logo} alt="SCP Foundation seal" className="brand__logo" />
+          <span className="brand__text">
+            <span className="brand__name">SCP Foundation</span>
+            <span className="brand__tag">Secure · Contain · Protect</span>
+          </span>
+        </Link>
+      </div>
+    </header>
+  );
+}
+
+export default Header;
