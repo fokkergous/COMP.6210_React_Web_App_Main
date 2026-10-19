@@ -76,4 +76,4 @@ Each version is tagged in git (`git tag`), so the project can be restored to any
 |---|---|
 | v0.1.0 | Original React site with hardcoded JSON data; Netlify config |
 | v0.1.1 | Housekeeping: database schema, environment-variable setup, README |
-| v0.2.0 | Supabase client connected; live database status in the header; deployed to Netlify |
+| v0.2.0 | Supabase client connected; live database status in the header (verified locally) |
