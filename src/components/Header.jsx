@@ -1,7 +1,9 @@
 import { Link } from 'react-router-dom';
 import logo from '../assets/scp/scp-logo.png';
+import DbStatus from './DbStatus';
 
-// Render the site header with branding and clearance information.
+// Render the site header with branding, clearance information and the
+// live database connection status.
 function Header() {
   return (
     <header className="site-header">
@@ -9,6 +11,8 @@ function Header() {
         <span>LEVEL 3 CLEARANCE REQUIRED</span>
         <span className="clearance-bar__sep" aria-hidden="true">·</span>
         <span>FIELD CATALOGUE — MOBILE ACCESS ENABLED</span>
+        <span className="clearance-bar__sep" aria-hidden="true">·</span>
+        <DbStatus />
       </div>
       <div className="site-header__row">
         <Link to="/" className="brand">

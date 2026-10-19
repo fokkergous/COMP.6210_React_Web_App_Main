@@ -14,6 +14,7 @@ A React web app for browsing and managing a catalogue of SCP Foundation subjects
 - Catalogue index of subject cards, plus a detailed dossier page for each subject
 - Responsive navigation with a full subject index
 - Redaction styling for `[DATA REDACTED]` text
+- Live database connection status in the header (reads the `object_classes` table from Supabase)
 
 **Planned:**
 - 20 subjects stored in Supabase
@@ -43,7 +44,8 @@ Every permission is enforced in the database by Row Level Security policies, not
 ## Project structure
 ```
 src/
-  components/   Shared UI (Header, Nav, Footer, Redacted)
+  components/   Shared UI (Header, Nav, Footer, Redacted, DbStatus)
+  lib/          Supabase client (supabase.js)
   pages/        Route pages (Home, ScpDetail, NotFound)
   data/         Local JSON data (being replaced by Supabase)
   assets/       Images
@@ -74,3 +76,4 @@ Each version is tagged in git (`git tag`), so the project can be restored to any
 |---|---|
 | v0.1.0 | Original React site with hardcoded JSON data; Netlify config |
 | v0.1.1 | Housekeeping: database schema, environment-variable setup, README |
+| v0.2.0 | Supabase client connected; live database status in the header; deployed to Netlify |

@@ -26,6 +26,36 @@
   opacity: 0.6;
 }
 
+/* Database connection status (DbStatus.jsx), shown in the clearance bar.
+   A small dot shows the state: pulsing while connecting, solid when online. */
+.db-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.db-status__dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--heading);
+}
+.db-status--connecting .db-status__dot {
+  animation: db-status-pulse 1s ease-in-out infinite;
+}
+.db-status--online .db-status__dot {
+  background: #8fd18a; /* light green: readable on the red accent bar */
+}
+.db-status--offline .db-status__dot {
+  background: var(--ink);
+}
+@keyframes db-status-pulse {
+  50% { opacity: 0.25; }
+}
+/* Respect users who have asked their OS for less motion. */
+@media (prefers-reduced-motion: reduce) {
+  .db-status--connecting .db-status__dot { animation: none; }
+}
+
 .site-header__row {
   border-bottom: 1px solid var(--line);
   padding: 16px 20px;
