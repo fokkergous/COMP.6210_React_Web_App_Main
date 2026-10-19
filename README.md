@@ -52,6 +52,7 @@ src/
   assets/       Images
 supabase/
   schema.sql    Database tables, RLS policies, triggers, storage bucket
+  seed.sql      Catalogue subjects and their sections (re-runnable)
 ```
 
 ## Running locally
@@ -70,6 +71,8 @@ Other scripts: `npm run build` (production build to `dist/`), `npm run preview` 
 2. In the SQL Editor, run `supabase/schema.sql`.
 3. In Authentication → URL Configuration, set the Site URL to `http://localhost:5173` and add `http://localhost:5173/**` to the Redirect URLs, so email confirmation links return to the app. Make sure "Confirm email" is on (Authentication → Sign In / Providers → Email).
 4. Sign up a user (in the app, or Authentication → Users → Add user), then set their `role` to `admin` in Table Editor → `profiles`.
+5. In Storage → `scp-images`, create a folder `seed` and upload the subject images from `src/assets/scp/` (not the logo).
+6. In the SQL Editor, run `supabase/seed.sql`. It is safe to run again; the check query at the bottom of the file shows the expected section counts.
 
 ## Version history
 Each version is tagged in git (`git tag`), so the project can be restored to any of them.
@@ -80,3 +83,4 @@ Each version is tagged in git (`git tag`), so the project can be restored to any
 | v0.1.1 | Housekeeping: database schema, environment-variable setup, README |
 | v0.2.0 | Supabase client connected; live database status in the header (verified locally) |
 | v0.3.0 | Auth: sign-up with email verification, login/logout, user name and role in the header (verified locally) |
+| v0.4.0 | Seed data: SCP-002 to SCP-006 and all their sections loaded into Supabase; images in Supabase Storage |

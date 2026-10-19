@@ -191,7 +191,7 @@ create table public.additional_notes (
 create index additional_notes_subject_idx on public.additional_notes (subject_id, position);
 
 -- Chronology: dated events. A real date type allows sorting and
--- formatting in the UI (source data uses DD/MM/YYYY).
+-- formatting in the UI (source data uses US-style MM/DD/YYYY).
 create table public.chronology_entries (
   id         bigint generated always as identity primary key,
   subject_id bigint not null references public.scp_subjects (id) on delete cascade,
