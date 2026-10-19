@@ -674,6 +674,53 @@
   background: rgba(92, 122, 79, 0.1);
 }
 
+/* ---------- Loading / error / empty messages (FileStatus.jsx) ---------- */
+.file-status {
+  text-align: center;
+  padding: 48px 20px;
+  border: 1px dashed var(--line-paper);
+  border-radius: 6px;
+  color: var(--muted);
+}
+.file-status__message {
+  max-width: 50ch;
+  margin: 10px auto 0;
+}
+/* Blinking cursor after the loading text, like a terminal. */
+.file-status--loading .file-status__message::after {
+  content: '_';
+  margin-left: 2px;
+  animation: file-status-blink 1s steps(1) infinite;
+}
+@keyframes file-status-blink {
+  50% { opacity: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .file-status--loading .file-status__message::after { animation: none; }
+}
+.file-status--error {
+  border-color: var(--accent);
+}
+.file-status--error .eyebrow {
+  color: var(--accent);
+}
+.file-status__retry {
+  margin-top: 18px;
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--heading);
+  background: none;
+  border: 1px solid var(--accent);
+  border-radius: 3px;
+  padding: 8px 16px;
+  cursor: pointer;
+}
+.file-status__retry:hover,
+.file-status__retry:focus-visible {
+  background: var(--accent);
+}
+
 /* ---------- 404 ---------- */
 .not-found {
   text-align: center;

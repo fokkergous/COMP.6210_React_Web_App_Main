@@ -1,10 +1,13 @@
 import { useState } from 'react';
 import { NavLink } from 'react-router-dom';
-import scpData from '../data/scpData.json';
+import { useSubjects } from '../context/SubjectsContext';
 
 // Render the primary navigation: toggleable index and per entry links.
+// The entry links come from the shared subjects list (Supabase); while it
+// loads, or if it fails, only Home is shown and the Home page explains why.
 function Nav() {
   const [open, setOpen] = useState(false);
+  const { subjects } = useSubjects();
 
   return (
     <nav className="site-nav" aria-label="Primary">
@@ -33,7 +36,7 @@ function Nav() {
             Home
           </NavLink>
         </li>
-        {scpData.map((entry) => (
+        {subjects.map((entry) => (
           <li key={entry.id}>
             <NavLink to={`/${entry.id}`}>{entry.item}</NavLink>
           </li>

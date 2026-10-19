@@ -1,16 +1,13 @@
 import { Link } from 'react-router-dom';
-import scpData from '../data/scpData.json';
-
-const images = import.meta.glob('../assets/scp/*.{jpg,png}', { eager: true, import: 'default' });
-
-// Return the imported image module that matches `filename` (or undefined if not found).
-function imageFor(filename) {
-  const match = Object.entries(images).find(([path]) => path.endsWith(filename));
-  return match ? match[1] : undefined;
-}
+import { useSubjects } from '../context/SubjectsContext';
+import SubjectImage from '../components/SubjectImage';
+import FileStatus from '../components/FileStatus';
 
 // Render the homepage: hero section and a grid of SCP entry cards.
+// The cards come from Supabase via the shared subjects list.
 function Home() {
+  const { subjects, loading, error, reload } = useSubjects();
+
   return (
     <>
       <section className="hero">
@@ -22,20 +19,33 @@ function Home() {
         </p>
       </section>
 
-      <section className="grid" aria-label="Catalogue entries">
-        {scpData.map((entry) => (
-          <Link to={`/${entry.id}`} className="card" key={entry.id}>
-            <div className="card__image-wrap">
-              <img src={imageFor(entry.image)} alt={entry.imageAlt} className="card__image" />
-            </div>
-            <div className="card__body">
-              <h2 className="card__item">{entry.item}</h2>
-              <p className="card__summary">{entry.summary}</p>
-              <span className="card__cta">Open file →</span>
-            </div>
-          </Link>
-        ))}
-      </section>
+      {/* Show exactly one of: loading, error, empty catalogue, or the cards. */}
+      {loading ? (
+        <FileStatus type="loading" message="Retrieving catalogue…" />
+      ) : error ? (
+        <FileStatus
+          type="error"
+          message="The catalogue could not be retrieved. Check your connection and try again."
+          onRetry={reload}
+        />
+      ) : subjects.length === 0 ? (
+        <FileStatus type="empty" message="No files have been entered into the catalogue yet." />
+      ) : (
+        <section className="grid" aria-label="Catalogue entries">
+          {subjects.map((entry) => (
+            <Link to={`/${entry.id}`} className="card" key={entry.id}>
+              <div className="card__image-wrap">
+                <SubjectImage src={entry.image} alt={entry.imageAlt} className="card__image" />
+              </div>
+              <div className="card__body">
+                <h2 className="card__item">{entry.item}</h2>
+                <p className="card__summary">{entry.summary}</p>
+                <span className="card__cta">Open file →</span>
+              </div>
+            </Link>
+          ))}
+        </section>
+      )}
     </>
   );
 }

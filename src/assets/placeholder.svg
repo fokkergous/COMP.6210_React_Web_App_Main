@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" role="img" aria-label="Image unavailable">
+  <!-- Placeholder shown when a subject has no image or its image fails to load.
+       16:10 to match the card image frame. -->
+  <rect width="800" height="500" fill="#2d2d2d"/>
+  <rect x="24" y="24" width="752" height="452" fill="none" stroke="#c7bb95" stroke-opacity="0.35"
+        stroke-width="2" stroke-dasharray="10 8"/>
+  <!-- SCP-style containment mark: circle with three inward arrows -->
+  <g transform="translate(400 200)" fill="none" stroke="#dc3545" stroke-width="10" stroke-linecap="round">
+    <circle r="70"/>
+    <path d="M0 -42 V-8 M-12 -20 L0 -8 L12 -20"/>
+    <path d="M0 -42 V-8 M-12 -20 L0 -8 L12 -20" transform="rotate(120)"/>
+    <path d="M0 -42 V-8 M-12 -20 L0 -8 L12 -20" transform="rotate(240)"/>
+  </g>
+  <text x="400" y="340" text-anchor="middle" fill="#e0e0e0"
+        font-family="Courier New, monospace" font-size="30" letter-spacing="6">IMAGE UNAVAILABLE</text>
+  <text x="400" y="380" text-anchor="middle" fill="#b9b9b9"
+        font-family="Courier New, monospace" font-size="18" letter-spacing="4">VISUAL RECORD [DATA REDACTED]</text>
+</svg>

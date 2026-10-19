@@ -1,34 +1,42 @@
-import { useParams, Link, Navigate } from 'react-router-dom';
-import scpData from '../data/scpData.json';
+import { useParams, Link } from 'react-router-dom';
+import { useSubject } from '../hooks/useSubject';
+import { useSubjects } from '../context/SubjectsContext';
 import Redacted from '../components/Redacted';
+import SubjectImage from '../components/SubjectImage';
+import FileStatus from '../components/FileStatus';
+import NotFound from './NotFound';
 
-const images = import.meta.glob('../assets/scp/*.{jpg,png}', { eager: true, import: 'default' });
-
-const CLASS_TONE = {
-  Safe: 'green',
-  Euclid: 'amber',
-  Keter: 'red',
-};
-
-// Return the imported image module that matches `filename` (or undefined if not found).
-function imageFor(filename) {
-  const match = Object.entries(images).find(([path]) => path.endsWith(filename));
-  return match ? match[1] : undefined;
-}
-
-// Render the detailed dossier for a single SCP entry based on the URL `id`.
-// Shows containment procedures, description, chronology, addenda, references, and navigation.
+// Render the detailed dossier for a single SCP entry based on the URL `id`
+// (the subject's slug, e.g. /scp-002). The full file is fetched from
+// Supabase; optional sections are only shown when the subject has them.
 function ScpDetail() {
   const { id } = useParams();
-  const index = scpData.findIndex((entry) => entry.id === id);
-  const entry = scpData[index];
+  const { subject: entry, loading, error, reload } = useSubject(id);
+  const { subjects } = useSubjects();
 
+  if (loading) {
+    return <FileStatus type="loading" message={`Retrieving file ${id.toUpperCase()}…`} />;
+  }
+  if (error) {
+    return (
+      <FileStatus
+        type="error"
+        message="This file could not be retrieved. Check your connection and try again."
+        onRetry={reload}
+      />
+    );
+  }
+  // Loaded without error but nothing matched the slug.
   if (!entry) {
-    return <Navigate to="/" replace />;
+    return <NotFound />;
   }
 
-  const prev = scpData[(index - 1 + scpData.length) % scpData.length];
-  const next = scpData[(index + 1) % scpData.length];
+  // Previous / next links follow the catalogue order and wrap around.
+  // Hidden until the shared list has loaded.
+  const index = subjects.findIndex((s) => s.id === entry.id);
+  const hasPager = index !== -1 && subjects.length > 1;
+  const prev = hasPager && subjects[(index - 1 + subjects.length) % subjects.length];
+  const next = hasPager && subjects[(index + 1) % subjects.length];
 
   return (
     <article className="dossier">
@@ -41,17 +49,14 @@ function ScpDetail() {
           <p className="eyebrow">Item #</p>
           <h1>{entry.item}</h1>
         </div>
-        <p className={`class-label class-label--${CLASS_TONE[entry.objectClass] || 'amber'}`}>
+        {/* tone (green / amber / red) comes from the object_classes table. */}
+        <p className={`class-label class-label--${entry.tone || 'amber'}`}>
           <span className="class-label__tag">Object Class</span>
           {entry.objectClass}
         </p>
       </header>
 
-      <img
-        src={imageFor(entry.image)}
-        alt={entry.imageAlt}
-        className="dossier__image"
-      />
+      <SubjectImage src={entry.image} alt={entry.imageAlt} className="dossier__image" />
 
       <section className="dossier__section">
         <h2>Special Containment Procedures</h2>
@@ -73,6 +78,7 @@ function ScpDetail() {
           <ol className="chronology">
             {entry.chronology.map((row, i) => (
               <li key={i}>
+                {/* Already formatted as DD/MM/YYYY in lib/subjects.js */}
                 <span className="chronology__date">{row.date}</span>
                 <span className="chronology__text"><Redacted text={row.text} /></span>
               </li>
@@ -84,8 +90,8 @@ function ScpDetail() {
       {entry.addenda && (
         <section className="dossier__section">
           <h2>Addenda</h2>
-          {entry.addenda.map((add, i) => (
-            <div className="addendum" key={i}>
+          {entry.addenda.map((add) => (
+            <div className="addendum" key={add.id}>
               <h3>{add.title}</h3>
               <p><Redacted text={add.text} /></p>
             </div>
@@ -128,16 +134,18 @@ function ScpDetail() {
         </section>
       )}
 
-      <nav className="dossier__pager" aria-label="Adjacent files">
-        <Link to={`/${prev.id}`} className="dossier__pager-link">
-          <span className="eyebrow">Previous</span>
-          <span>{prev.item}</span>
-        </Link>
-        <Link to={`/${next.id}`} className="dossier__pager-link dossier__pager-link--next">
-          <span className="eyebrow">Next</span>
-          <span>{next.item}</span>
-        </Link>
-      </nav>
+      {hasPager && (
+        <nav className="dossier__pager" aria-label="Adjacent files">
+          <Link to={`/${prev.id}`} className="dossier__pager-link">
+            <span className="eyebrow">Previous</span>
+            <span>{prev.item}</span>
+          </Link>
+          <Link to={`/${next.id}`} className="dossier__pager-link dossier__pager-link--next">
+            <span className="eyebrow">Next</span>
+            <span>{next.item}</span>
+          </Link>
+        </nav>
+      )}
     </article>
   );
 }
