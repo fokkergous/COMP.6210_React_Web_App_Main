@@ -56,9 +56,78 @@
   .db-status--connecting .db-status__dot { animation: none; }
 }
 
+/* Header row: brand in the centre, account area on the right.
+   Three columns (1fr auto 1fr) keep the brand centred whatever the width
+   of the account area. On narrow screens the account area drops below. */
 .site-header__row {
   border-bottom: 1px solid var(--line);
   padding: 16px 20px;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 12px;
+}
+.site-header__row .brand {
+  grid-column: 2;
+}
+.site-header__row > :last-child:not(.brand) {
+  grid-column: 3;
+  justify-self: end;
+}
+@media (max-width: 640px) {
+  .site-header__row {
+    grid-template-columns: 1fr;
+  }
+  .site-header__row .brand,
+  .site-header__row > :last-child:not(.brand) {
+    grid-column: 1;
+    justify-self: center;
+  }
+}
+
+/* ---------- Account area (AccountStatus.jsx) ---------- */
+.account {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-family: var(--mono);
+  font-size: 13px;
+}
+.account__name {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--heading);
+}
+.account__role {
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent);
+  border: 1px solid var(--accent);
+  border-radius: 3px;
+  padding: 1px 6px;
+}
+.account__login,
+.account__logout {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--heading);
+  background: none;
+  border: 1px solid var(--line-paper);
+  border-radius: 3px;
+  padding: 6px 12px;
+  text-decoration: none;
+  cursor: pointer;
+}
+.account__login:hover,
+.account__logout:hover,
+.account__login:focus-visible,
+.account__logout:focus-visible {
+  border-color: var(--accent);
+  color: var(--accent);
 }
 
 .brand {
@@ -473,6 +542,136 @@
   font-size: 12px;
   color: var(--muted);
   max-width: 46ch;
+}
+
+/* ---------- Login / sign-up (Login.jsx) ----------
+   Styled as a paper personnel form, matching the dossier pages. */
+.auth {
+  display: flex;
+  justify-content: center;
+  padding: 24px 0 48px;
+}
+.auth__panel {
+  width: 100%;
+  max-width: 440px;
+  background: var(--paper);
+  color: #2b2416;
+  border-radius: 6px;
+  padding: 28px 24px 32px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
+}
+.auth__panel .eyebrow {
+  color: var(--ink-3);
+}
+.auth__title {
+  color: #2b2416;
+  font-size: 30px;
+  margin: 6px 0 18px;
+}
+
+/* Sign in / Create account switch */
+.auth__tabs {
+  display: flex;
+  border-bottom: 2px solid #2b2416;
+  margin-bottom: 20px;
+}
+.auth__tab {
+  flex: 1;
+  background: none;
+  border: none;
+  border-bottom: 3px solid transparent;
+  margin-bottom: -2px;
+  padding: 10px 6px;
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #5a5138;
+  cursor: pointer;
+}
+.auth__tab[aria-pressed='true'] {
+  color: #2b2416;
+  border-bottom-color: var(--accent);
+}
+.auth__tab:hover,
+.auth__tab:focus-visible {
+  color: var(--accent);
+}
+
+.auth__form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+.auth__field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.auth__field label {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #2b2416;
+}
+/* Typed-form look: a ruled line rather than a box. */
+.auth__field input {
+  font-family: var(--mono);
+  font-size: 16px; /* 16px stops iOS zooming in on focus */
+  color: #2b2416;
+  background: rgba(255, 255, 255, 0.35);
+  border: none;
+  border-bottom: 2px solid var(--line-paper);
+  border-radius: 3px 3px 0 0;
+  padding: 10px 8px;
+}
+.auth__field input:focus {
+  outline: none;
+  border-bottom-color: var(--accent);
+  background: rgba(255, 255, 255, 0.6);
+}
+.auth__hint {
+  font-size: 13px;
+  color: #5a5138;
+}
+
+.auth__submit {
+  margin-top: 6px;
+  background: var(--accent);
+  color: var(--heading);
+  border: none;
+  border-radius: 4px;
+  padding: 13px 16px;
+  font-size: 13px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+.auth__submit:hover,
+.auth__submit:focus-visible {
+  background: var(--accent-2);
+}
+.auth__submit:disabled {
+  opacity: 0.6;
+  cursor: progress;
+}
+
+.auth__message {
+  font-size: 15px;
+  border-radius: 4px;
+  padding: 10px 12px;
+  margin: 0 0 18px;
+  border-left: 4px solid;
+}
+.auth__message--error {
+  color: var(--red);
+  border-color: var(--red);
+  background: rgba(164, 52, 47, 0.08);
+}
+.auth__message--notice {
+  color: #3f5a35; /* darker than --green so text stays readable on paper */
+  border-color: var(--green);
+  background: rgba(92, 122, 79, 0.1);
 }
 
 /* ---------- 404 ---------- */

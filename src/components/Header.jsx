@@ -1,9 +1,10 @@
 import { Link } from 'react-router-dom';
 import logo from '../assets/scp/scp-logo.png';
 import DbStatus from './DbStatus';
+import AccountStatus from './AccountStatus';
 
-// Render the site header with branding, clearance information and the
-// live database connection status.
+// Render the site header with branding, clearance information, the live
+// database connection status and the account (log in / log out) area.
 function Header() {
   return (
     <header className="site-header">
@@ -22,6 +23,7 @@ function Header() {
             <span className="brand__tag">Secure · Contain · Protect</span>
           </span>
         </Link>
+        <AccountStatus />
       </div>
     </header>
   );

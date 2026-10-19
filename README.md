@@ -15,10 +15,10 @@ A React web app for browsing and managing a catalogue of SCP Foundation subjects
 - Responsive navigation with a full subject index
 - Redaction styling for `[DATA REDACTED]` text
 - Live database connection status in the header (reads the `object_classes` table from Supabase)
+- Sign-up with email verification, login and logout (Supabase Auth); the header shows the user's display name and role
 
 **Planned:**
 - 20 subjects stored in Supabase
-- Sign-up and login (Supabase Auth)
 - Create, edit and delete subjects (editors and admins)
 - Addenda: any logged-in user can add them, and authors can edit and delete their own
 
@@ -44,9 +44,10 @@ Every permission is enforced in the database by Row Level Security policies, not
 ## Project structure
 ```
 src/
-  components/   Shared UI (Header, Nav, Footer, Redacted, DbStatus)
+  components/   Shared UI (Header, Nav, Footer, Redacted, DbStatus, AccountStatus)
+  context/      Login state shared app-wide (AuthProvider, useAuth)
   lib/          Supabase client (supabase.js)
-  pages/        Route pages (Home, ScpDetail, NotFound)
+  pages/        Route pages (Home, ScpDetail, Login, NotFound)
   data/         Local JSON data (being replaced by Supabase)
   assets/       Images
 supabase/
@@ -67,7 +68,8 @@ Other scripts: `npm run build` (production build to `dist/`), `npm run preview` 
 ## Database setup
 1. Create a Supabase project.
 2. In the SQL Editor, run `supabase/schema.sql`.
-3. Sign up a user (Authentication → Users → Add user), then set their `role` to `admin` in Table Editor → `profiles`.
+3. In Authentication → URL Configuration, set the Site URL to `http://localhost:5173` and add `http://localhost:5173/**` to the Redirect URLs, so email confirmation links return to the app. Make sure "Confirm email" is on (Authentication → Sign In / Providers → Email).
+4. Sign up a user (in the app, or Authentication → Users → Add user), then set their `role` to `admin` in Table Editor → `profiles`.
 
 ## Version history
 Each version is tagged in git (`git tag`), so the project can be restored to any of them.
@@ -77,3 +79,4 @@ Each version is tagged in git (`git tag`), so the project can be restored to any
 | v0.1.0 | Original React site with hardcoded JSON data; Netlify config |
 | v0.1.1 | Housekeeping: database schema, environment-variable setup, README |
 | v0.2.0 | Supabase client connected; live database status in the header (verified locally) |
+| v0.3.0 | Auth: sign-up with email verification, login/logout, user name and role in the header (verified locally) |
