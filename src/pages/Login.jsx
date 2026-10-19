@@ -138,19 +138,19 @@ function Login() {
         {/* role="alert" / role="status" make screen readers read these out
             as soon as they appear. */}
         {error && (
-          <p className="auth__message auth__message--error" role="alert">
+          <p className="form-message form-message--error" role="alert">
             {error}
           </p>
         )}
         {notice && (
-          <p className="auth__message auth__message--notice" role="status">
+          <p className="form-message form-message--notice" role="status">
             {notice}
           </p>
         )}
 
         <form className="auth__form" onSubmit={handleSubmit}>
           {isSignUp && (
-            <div className="auth__field">
+            <div className="form-field">
               <label htmlFor="auth-name">Display name</label>
               <input
                 id="auth-name"
@@ -161,11 +161,11 @@ function Login() {
                 value={displayName}
                 onChange={(e) => setDisplayName(e.target.value)}
               />
-              <span className="auth__hint">Shown on addenda you write.</span>
+              <span className="form-hint">Shown on addenda you write.</span>
             </div>
           )}
 
-          <div className="auth__field">
+          <div className="form-field">
             <label htmlFor="auth-email">Email</label>
             <input
               id="auth-email"
@@ -177,7 +177,7 @@ function Login() {
             />
           </div>
 
-          <div className="auth__field">
+          <div className="form-field">
             <label htmlFor="auth-password">Password</label>
             <input
               id="auth-password"
@@ -190,12 +190,12 @@ function Login() {
               onChange={(e) => setPassword(e.target.value)}
             />
             {isSignUp && (
-              <span className="auth__hint">At least {MIN_PASSWORD_LENGTH} characters.</span>
+              <span className="form-hint">At least {MIN_PASSWORD_LENGTH} characters.</span>
             )}
           </div>
 
           {isSignUp && (
-            <div className="auth__field">
+            <div className="form-field">
               <label htmlFor="auth-confirm">Confirm password</label>
               <input
                 id="auth-confirm"
@@ -209,7 +209,7 @@ function Login() {
           )}
 
           {/* Disabled while waiting for Supabase so it can't be submitted twice. */}
-          <button type="submit" className="auth__submit" disabled={submitting}>
+          <button type="submit" className="form-button" disabled={submitting}>
             {submitting ? 'Verifying…' : isSignUp ? 'Request clearance' : 'Sign in'}
           </button>
         </form>

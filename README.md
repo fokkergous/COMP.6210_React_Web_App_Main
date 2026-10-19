@@ -19,11 +19,11 @@ A React web app for browsing and managing a catalogue of SCP Foundation subjects
 - Redaction styling for `[DATA REDACTED]` text
 - Live database connection status in the header (reads the `object_classes` table from Supabase)
 - Sign-up with email verification, login and logout (Supabase Auth); the header shows the user's display name and role
+- Addenda: any logged-in user can file one on any subject; authors can edit and delete their own (admins can manage all), with a confirmation dialog before deleting. Each addendum shows its author and date
 
 **Planned:**
 - Images for SCP-007 to SCP-021 (they currently show the placeholder)
 - Create, edit and delete subjects (editors and admins)
-- Addenda: any logged-in user can add them, and authors can edit and delete their own
 
 ## Tech stack
 | Layer | Technology |
@@ -48,11 +48,12 @@ Every permission is enforced in the database by Row Level Security policies, not
 ```
 src/
   components/   Shared UI (Header, Nav, Footer, Redacted, DbStatus, AccountStatus,
-                SubjectImage, FileStatus)
+                SubjectImage, FileStatus, Addenda, AddendumForm, ConfirmDialog)
   context/      State shared app-wide: login (AuthProvider, useAuth) and the
                 catalogue list (SubjectsProvider, useSubjects)
   hooks/        useSubject: loads one full subject for the dossier page
-  lib/          Supabase client (supabase.js) and subject queries (subjects.js)
+  lib/          Supabase client (supabase.js), subject queries (subjects.js) and
+                addendum writes (addenda.js)
   pages/        Route pages (Home, ScpDetail, Login, NotFound)
   assets/       Logo and placeholder image (subject images live in Supabase Storage)
 supabase/
@@ -91,6 +92,7 @@ Each version is tagged in git (`git tag`), so the project can be restored to any
 | v0.4.0 | Seed data: SCP-002 to SCP-006 and all their sections loaded into Supabase; images in Supabase Storage |
 | v0.5.0 | App reads all subjects from Supabase; loading/error states; placeholder image; DD/MM/YYYY dates; local JSON and images removed |
 | v0.6.0 | 20 subjects: SCP-007 to SCP-021 added to the seed; navigation reworked into a drop-down file index |
+| v0.7.0 | Addenda: add, edit and delete your own (admins: all), author and date bylines, delete confirmation dialog; first writes to Supabase, enforced by RLS |
 
 ## Credits
 SCP Foundation content is adapted from the [SCP Wiki](https://scp-wiki.wikidot.com) and its authors, used under the [Creative Commons Attribution-ShareAlike 3.0](https://creativecommons.org/licenses/by-sa/3.0/) licence. Subject text in this project has been rewritten and shortened; SCP-014 is an original subject.

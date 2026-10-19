@@ -14,7 +14,7 @@ const LIST_COLUMNS = 'item, slug, summary, image_url, image_alt, object_classes(
 // table; Supabase joins them through their foreign keys and returns them
 // nested inside the subject, so one request fetches the whole file.
 const DETAIL_COLUMNS = `
-  item, slug, summary, image_url, image_alt, owner_id,
+  id, item, slug, summary, image_url, image_alt, owner_id,
   object_classes(name, tone),
   containment_procedures(position, body),
   descriptions(position, body),
@@ -23,7 +23,7 @@ const DETAIL_COLUMNS = `
   chronology_entries(position, event_date, body),
   appendices(title, body),
   field_reports(title, intro, field_report_entries(position, body)),
-  addenda(id, title, body, created_at, author_id, profiles(display_name))
+  addenda(id, title, body, created_at, updated_at, author_id, profiles(display_name))
 `;
 
 // Fetch the catalogue list, ordered by item number (SCP-002, SCP-003, ...).
@@ -78,6 +78,10 @@ function toDossier(row) {
 
   return {
     ...toCard(row),
+    // The numeric primary key, needed when writing rows that belong to this
+    // subject (e.g. a new addendum). Separate from `id`, which is the slug
+    // used in URLs.
+    dbId: row.id,
     ownerId: row.owner_id,
     containmentProcedures: bodies(row.containment_procedures),
     description: bodies(row.descriptions),
@@ -106,6 +110,9 @@ function toDossier(row) {
           authorId: addendum.author_id,
           // null for the original (seeded) addenda, which have no author
           authorName: addendum.profiles?.display_name ?? null,
+          createdAt: addendum.created_at,
+          // updated_at is set by a database trigger whenever the row changes
+          edited: addendum.updated_at > addendum.created_at,
         }))
     ),
   };
@@ -141,4 +148,19 @@ export function formatDate(isoDate) {
   if (!isoDate) return '';
   const [year, month, day] = isoDate.split('-');
   return `${day}/${month}/${year}`;
+}
+
+// A timestamp such as '2026-10-19T05:44:32+00:00' (an exact moment, stored
+// in UTC) -> DD/MM/YYYY in the viewer's own time zone. Unlike formatDate,
+// the time zone matters here: the same moment can be a different calendar
+// day in New Zealand than in UTC, so the browser converts it first.
+const DAY_MONTH_YEAR = new Intl.DateTimeFormat('en-NZ', {
+  day: '2-digit',
+  month: '2-digit',
+  year: 'numeric',
+});
+
+export function formatTimestamp(timestamp) {
+  if (!timestamp) return '';
+  return DAY_MONTH_YEAR.format(new Date(timestamp));
 }

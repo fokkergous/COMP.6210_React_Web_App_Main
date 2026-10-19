@@ -4,6 +4,7 @@ import { useSubjects } from '../context/SubjectsContext';
 import Redacted from '../components/Redacted';
 import SubjectImage from '../components/SubjectImage';
 import FileStatus from '../components/FileStatus';
+import Addenda from '../components/Addenda';
 import NotFound from './NotFound';
 
 // Render the detailed dossier for a single SCP entry based on the URL `id`
@@ -11,7 +12,7 @@ import NotFound from './NotFound';
 // Supabase; optional sections are only shown when the subject has them.
 function ScpDetail() {
   const { id } = useParams();
-  const { subject: entry, loading, error, reload } = useSubject(id);
+  const { subject: entry, loading, error, reload, refresh } = useSubject(id);
   const { subjects } = useSubjects();
 
   if (loading) {
@@ -87,17 +88,8 @@ function ScpDetail() {
         </section>
       )}
 
-      {entry.addenda && (
-        <section className="dossier__section">
-          <h2>Addenda</h2>
-          {entry.addenda.map((add) => (
-            <div className="addendum" key={add.id}>
-              <h3>{add.title}</h3>
-              <p><Redacted text={add.text} /></p>
-            </div>
-          ))}
-        </section>
-      )}
+      {/* Addenda: read by everyone, written by logged-in users (see Addenda.jsx). */}
+      <Addenda subjectId={entry.dbId} addenda={entry.addenda} onChanged={refresh} />
 
       {entry.reference && (
         <section className="dossier__section">

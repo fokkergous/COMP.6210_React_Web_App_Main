@@ -629,12 +629,15 @@
   flex-direction: column;
   gap: 18px;
 }
-.auth__field {
+/* ---------- Shared paper-form styles ----------
+   Used by the login page and the addendum form (and later the subject
+   forms): ruled inputs, mono labels, accent buttons, message boxes. */
+.form-field {
   display: flex;
   flex-direction: column;
   gap: 6px;
 }
-.auth__field label {
+.form-field label {
   font-family: var(--mono);
   font-size: 12px;
   letter-spacing: 0.12em;
@@ -642,7 +645,8 @@
   color: #2b2416;
 }
 /* Typed-form look: a ruled line rather than a box. */
-.auth__field input {
+.form-field input,
+.form-field textarea {
   font-family: var(--mono);
   font-size: 16px; /* 16px stops iOS zooming in on focus */
   color: #2b2416;
@@ -652,17 +656,18 @@
   border-radius: 3px 3px 0 0;
   padding: 10px 8px;
 }
-.auth__field input:focus {
+.form-field input:focus,
+.form-field textarea:focus {
   outline: none;
   border-bottom-color: var(--accent);
   background: rgba(255, 255, 255, 0.6);
 }
-.auth__hint {
+.form-hint {
   font-size: 13px;
   color: #5a5138;
 }
 
-.auth__submit {
+.form-button {
   margin-top: 6px;
   background: var(--accent);
   color: var(--heading);
@@ -674,31 +679,151 @@
   text-transform: uppercase;
   cursor: pointer;
 }
-.auth__submit:hover,
-.auth__submit:focus-visible {
+.form-button:hover,
+.form-button:focus-visible {
   background: var(--accent-2);
 }
-.auth__submit:disabled {
+.form-button:disabled {
   opacity: 0.6;
   cursor: progress;
 }
 
-.auth__message {
+.form-message {
   font-size: 15px;
   border-radius: 4px;
   padding: 10px 12px;
   margin: 0 0 18px;
   border-left: 4px solid;
 }
-.auth__message--error {
+.form-message--error {
   color: var(--red);
   border-color: var(--red);
   background: rgba(164, 52, 47, 0.08);
 }
-.auth__message--notice {
+.form-message--notice {
   color: #3f5a35; /* darker than --green so text stays readable on paper */
   border-color: var(--green);
   background: rgba(92, 122, 79, 0.1);
+}
+
+/* Longer text is easier to read in the body font; resize only vertically. */
+.form-field textarea {
+  font-family: var(--body);
+  line-height: 1.5;
+  resize: vertical;
+  min-height: 8em;
+}
+.form-field input::placeholder {
+  color: #8a8064;
+}
+
+/* Button variants: outlined (Cancel) and destructive (Delete). */
+.form-button--secondary {
+  background: none;
+  color: #2b2416;
+  border: 1px solid #2b2416;
+}
+.form-button--secondary:hover,
+.form-button--secondary:focus-visible {
+  background: rgba(43, 36, 22, 0.08);
+}
+.form-button--danger {
+  background: var(--red);
+}
+.form-button--danger:hover,
+.form-button--danger:focus-visible {
+  background: #7d2622;
+}
+
+/* Small inline actions that read as links (Edit / Delete on an addendum). */
+.text-button {
+  background: none;
+  border: none;
+  padding: 2px 0;
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #5a5138;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+.text-button:hover,
+.text-button:focus-visible {
+  color: var(--accent);
+}
+.text-button--danger {
+  color: var(--red);
+}
+
+/* ---------- Addenda (Addenda.jsx, AddendumForm.jsx) ---------- */
+.addendum__byline {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  color: #5a5138;
+  margin: -2px 0 8px;
+}
+.addendum__actions {
+  display: flex;
+  gap: 16px;
+  margin-top: -4px;
+}
+/* The form being written gets a dashed rule instead of the solid accent. */
+.addendum--new {
+  border-left-style: dashed;
+}
+.addendum-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.addendum-form__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.addenda__empty,
+.addenda__login {
+  color: #5a5138;
+  font-style: italic;
+}
+.addenda__login a {
+  color: var(--accent);
+}
+
+/* ---------- Confirmation dialog (ConfirmDialog.jsx) ---------- */
+.confirm-dialog {
+  width: min(420px, calc(100% - 32px));
+  background: var(--paper);
+  color: #2b2416;
+  border: none;
+  border-top: 4px solid var(--red);
+  border-radius: 6px;
+  padding: 24px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+}
+/* The page behind the open dialog is dimmed. */
+.confirm-dialog::backdrop {
+  background: rgba(0, 0, 0, 0.6);
+}
+.confirm-dialog .eyebrow {
+  color: var(--red);
+}
+.confirm-dialog__title {
+  color: #2b2416;
+  font-size: 24px;
+  margin: 6px 0 10px;
+}
+.confirm-dialog__message {
+  margin: 0 0 20px;
+}
+.confirm-dialog__actions {
+  display: flex;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 10px;
 }
 
 /* ---------- Loading / error / empty messages (FileStatus.jsx) ---------- */

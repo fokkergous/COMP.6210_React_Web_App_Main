@@ -4,10 +4,12 @@ import { fetchSubject } from '../lib/subjects';
 // Loads one full subject (every section) for the dossier page.
 // Fetches again whenever the slug in the URL changes.
 //
-// Returns { subject, loading, error, reload }:
+// Returns { subject, loading, error, reload, refresh }:
 //   subject  the dossier object, or null (still loading, failed, or no such slug)
 //   loading  true while fetching
 //   error    the error if the fetch failed, otherwise null
+//   reload   fetch again from scratch, showing the loading state (for "Try again")
+//   refresh  fetch again quietly, keeping the page on screen (after saving a change)
 // "Not found" is: not loading, no error, and subject is null.
 export function useSubject(slug) {
   const [subject, setSubject] = useState(null);
@@ -43,5 +45,13 @@ export function useSubject(slug) {
 
   const reload = useCallback(() => setAttempt((n) => n + 1), []);
 
-  return { subject, loading, error, reload };
+  // Re-fetch without clearing the subject or showing "Retrieving file…", so
+  // the page doesn't flash or jump back to the top after a save. Errors are
+  // thrown back to the caller, which shows its own message.
+  const refresh = useCallback(async () => {
+    const result = await fetchSubject(slug);
+    setSubject(result);
+  }, [slug]);
+
+  return { subject, loading, error, reload, refresh };
 }
