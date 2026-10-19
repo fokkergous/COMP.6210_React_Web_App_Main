@@ -12,6 +12,12 @@ dist
 dist-ssr
 *.local
 
+# Environment variables (Supabase URL and key). Never commit these;
+# .env.example lists the variable names instead.
+.env
+.env.*
+!.env.example
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

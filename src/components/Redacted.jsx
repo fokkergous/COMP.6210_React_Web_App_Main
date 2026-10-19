@@ -1,4 +1,4 @@
-// Splits paragraph text on [DATA EXPUNGED] markers so they can be rendered
+// Splits paragraph text on [DATA REDACTED] markers so they can be rendered
 // as permanently inked out redaction bars, matching the source SCP
 // documents' redaction convention.
 function Redacted({ text }) {
