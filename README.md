@@ -11,8 +11,8 @@ A React web app for browsing and managing a catalogue of SCP Foundation subjects
 
 ## Features
 **Current:**
-- Catalogue index of subject cards, plus a detailed dossier page for each subject, all read from Supabase
-- Responsive navigation with a full subject index
+- Catalogue of 20 subjects (SCP-002 to SCP-021): index of subject cards, plus a detailed dossier page for each subject, all read from Supabase
+- Navigation bar with a drop-down file index that stays one line however many subjects there are
 - Loading and error states (with retry) for every database request
 - Placeholder image when a subject's image is missing or fails to load
 - Dates shown as DD/MM/YYYY
@@ -21,7 +21,7 @@ A React web app for browsing and managing a catalogue of SCP Foundation subjects
 - Sign-up with email verification, login and logout (Supabase Auth); the header shows the user's display name and role
 
 **Planned:**
-- 20 subjects stored in Supabase
+- Images for SCP-007 to SCP-021 (they currently show the placeholder)
 - Create, edit and delete subjects (editors and admins)
 - Addenda: any logged-in user can add them, and authors can edit and delete their own
 
@@ -76,7 +76,7 @@ Other scripts: `npm run build` (production build to `dist/`), `npm run preview` 
 2. In the SQL Editor, run `supabase/schema.sql`.
 3. In Authentication → URL Configuration, set the Site URL to `http://localhost:5173` and add `http://localhost:5173/**` to the Redirect URLs, so email confirmation links return to the app. Make sure "Confirm email" is on (Authentication → Sign In / Providers → Email).
 4. Sign up a user (in the app, or Authentication → Users → Add user), then set their `role` to `admin` in Table Editor → `profiles`.
-5. In Storage → `scp-images`, create a folder `seed` and upload the subject images (`scp-002.jpg` … `scp-006.jpg`, with `scp-005.png`). The originals were removed from the code in v0.5.0; get them from the `v0.4.0` tag (`git checkout v0.4.0 -- src/assets/scp`) if setting up a new project.
+5. In Storage → `scp-images`, create a folder `seed` and upload the subject images (`scp-002.jpg` … `scp-006.jpg`, with `scp-005.png`). The originals were removed from the code in v0.5.0; get them from the `v0.4.0` tag (`git checkout v0.4.0 -- src/assets/scp`) if setting up a new project. SCP-007 to SCP-021 expect `scp-007.jpg` … `scp-021.jpg` and show a placeholder until those are uploaded.
 6. In the SQL Editor, run `supabase/seed.sql`. It is safe to run again; the check query at the bottom of the file shows the expected section counts.
 
 ## Version history
@@ -90,3 +90,7 @@ Each version is tagged in git (`git tag`), so the project can be restored to any
 | v0.3.0 | Auth: sign-up with email verification, login/logout, user name and role in the header (verified locally) |
 | v0.4.0 | Seed data: SCP-002 to SCP-006 and all their sections loaded into Supabase; images in Supabase Storage |
 | v0.5.0 | App reads all subjects from Supabase; loading/error states; placeholder image; DD/MM/YYYY dates; local JSON and images removed |
+| v0.6.0 | 20 subjects: SCP-007 to SCP-021 added to the seed; navigation reworked into a drop-down file index |
+
+## Credits
+SCP Foundation content is adapted from the [SCP Wiki](https://scp-wiki.wikidot.com) and its authors, used under the [Creative Commons Attribution-ShareAlike 3.0](https://creativecommons.org/licenses/by-sa/3.0/) licence. Subject text in this project has been rewritten and shortened; SCP-014 is an original subject.

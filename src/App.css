@@ -163,7 +163,10 @@
   color: var(--accent);
 }
 
-/* ---------- Nav ---------- */
+/* ---------- Nav (Nav.jsx) ----------
+   One slim sticky bar (Home + File index button) on every screen size.
+   The index opens as a grid below it, so the bar never grows with the
+   number of subjects. */
 .site-nav {
   position: sticky;
   top: 0;
@@ -172,79 +175,103 @@
   backdrop-filter: blur(8px);
   border-bottom: 1px solid var(--line);
 }
-
-.nav-toggle {
+.site-nav__bar {
   display: flex;
   align-items: center;
-  gap: 10px;
-  width: 100%;
+  justify-content: space-between;
+  gap: 12px;
   max-width: 960px;
   margin: 0 auto;
-  background: none;
-  border: none;
-  color: var(--heading);
+  padding: 8px 20px;
+}
+
+.site-nav__home,
+.nav-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--mono);
   font-size: 13px;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  padding: 12px 20px;
+  color: var(--heading);
+  text-decoration: none;
+  background: none;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  padding: 8px 12px;
+}
+/* The File index button shares the Home link's look; it turns accent red
+   while the index is open, the same way Home does on the home page. */
+.site-nav__home.active,
+.nav-toggle[aria-expanded='true'] {
+  color: var(--accent);
+}
+.nav-toggle {
   cursor: pointer;
+}
+.site-nav__home:hover,
+.nav-toggle:hover,
+.site-nav__home:focus-visible,
+.nav-toggle:focus-visible {
+  background: var(--ink-3);
 }
 .nav-toggle__icon {
   display: inline-flex;
   flex-direction: column;
   gap: 4px;
-  width: 20px;
+  width: 18px;
 }
 .nav-toggle__icon span {
   height: 2px;
   background: var(--accent);
   display: block;
 }
+/* Number of files in the catalogue */
+.nav-toggle__count {
+  font-size: 11px;
+  color: var(--muted);
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  padding: 0 6px;
+}
 
+/* The drop-down index: a grid of file links that fits as many per row as
+   the width allows, and scrolls if the catalogue grows very large. */
 .nav-list {
-  justify-content: center;
   list-style: none;
-  margin: 0 auto;
-  padding: 0 20px 12px;
   max-width: 960px;
   margin: 0 auto;
-  display: none;
-  flex-direction: column;
-  gap: 2px;
+  padding: 4px 20px 16px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(104px, 1fr));
+  gap: 6px;
+  max-height: 60vh;
+  overflow-y: auto;
 }
-.nav-list--open {
-  display: flex;
+/* display: grid above would otherwise override the hidden attribute. */
+.nav-list[hidden] {
+  display: none;
 }
 .nav-list a {
   display: block;
+  text-align: center;
   text-decoration: none;
   font-family: var(--mono);
-  font-size: 14px;
+  font-size: 13px;
   color: var(--text);
-  padding: 10px 12px;
+  padding: 8px 6px;
+  border: 1px solid var(--line);
   border-radius: 4px;
-  border-left: 2px solid transparent;
 }
 .nav-list a.active {
   color: var(--accent);
-  border-left-color: var(--accent);
+  border-color: var(--accent);
   background: var(--accent-bg);
 }
-.nav-list a:hover {
+.nav-list a:hover,
+.nav-list a:focus-visible {
   background: var(--ink-3);
-}
-
-@media (min-width: 768px) {
-  .nav-toggle {
-    display: none;
-  }
-  .nav-list {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    gap: 4px;
-    padding: 10px 20px;
-  }
 }
 
 /* ---------- Hero ---------- */
