@@ -6,6 +6,7 @@ import { fetchObjectClasses } from '../lib/subjects';
 import { createSubject, EMPTY_SUBJECT } from '../lib/subjectWrites';
 import SubjectForm from '../components/SubjectForm';
 import FileStatus from '../components/FileStatus';
+import ClearanceRequired from '../components/ClearanceRequired';
 
 // Roles allowed to create subjects. Matches the RLS insert policy on
 // scp_subjects in schema.sql; the database enforces it either way.
@@ -43,20 +44,10 @@ function NewSubject() {
   // Not allowed: explain why instead of showing a form that would fail.
   if (!user || !CAN_CREATE.includes(role)) {
     return (
-      <section className="not-found">
-        <p className="eyebrow">Access denied</p>
-        <h1>Editor Clearance Required</h1>
-        <p>
-          {user
-            ? 'Only editors and administrators can open new files. Contact an administrator if you need editor access.'
-            : 'Log in with an editor account to open a new file.'}
-        </p>
-        {user ? (
-          <Link to="/" className="card__cta">← Return to index</Link>
-        ) : (
-          <Link to="/login" state={{ from: '/new' }} className="card__cta">Log in →</Link>
-        )}
-      </section>
+      <ClearanceRequired
+        loggedIn={Boolean(user)}
+        reason="Only editors and administrators can open new files. Contact an administrator if you need editor access."
+      />
     );
   }
 
@@ -68,8 +59,8 @@ function NewSubject() {
   const highest = Math.max(0, ...subjects.map((s) => Number(s.item.replace('SCP-', ''))));
   const initialValues = { ...EMPTY_SUBJECT, item: `SCP-${String(highest + 1).padStart(3, '0')}` };
 
-  async function handleSubmit(values, imageFile) {
-    const slug = await createSubject(values, imageFile, user.id);
+  async function handleSubmit(values, image) {
+    const slug = await createSubject(values, image.file, user.id);
     // Refresh the shared list so Home and the File index include the new file.
     reloadList();
     navigate(`/${slug}`);

@@ -14,7 +14,7 @@ const LIST_COLUMNS = 'item, slug, summary, image_url, image_alt, object_classes(
 // table; Supabase joins them through their foreign keys and returns them
 // nested inside the subject, so one request fetches the whole file.
 const DETAIL_COLUMNS = `
-  id, item, slug, summary, image_url, image_alt, owner_id,
+  id, item, slug, summary, image_url, image_alt, owner_id, object_class_id,
   object_classes(name, tone),
   containment_procedures(position, body),
   descriptions(position, body),
@@ -95,6 +95,9 @@ function toDossier(row) {
     // used in URLs.
     dbId: row.id,
     ownerId: row.owner_id,
+    // Raw values the edit form needs (the fields above are for display).
+    objectClassId: row.object_class_id,
+    imageAltText: row.image_alt ?? '',
     containmentProcedures: bodies(row.containment_procedures),
     description: bodies(row.descriptions),
     reference: nullIfEmpty(bodies(row.subject_references)),
@@ -102,6 +105,8 @@ function toDossier(row) {
     chronology: nullIfEmpty(
       sortByPosition(row.chronology_entries).map((entry) => ({
         date: formatDate(entry.event_date),
+        // YYYY-MM-DD, the format the edit form's date picker needs
+        isoDate: entry.event_date,
         text: entry.body,
       }))
     ),

@@ -857,6 +857,47 @@
   margin-top: 18px;
 }
 
+/* ---------- Edit / delete (ScpDetail.jsx, EditSubject.jsx) ---------- */
+/* Back link on the left, the owner's Edit / Delete buttons on the right. */
+.dossier__topbar {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 18px;
+}
+.dossier__topbar .dossier__back {
+  margin-bottom: 0;
+}
+.dossier__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.dossier__actions .form-button {
+  margin-top: 0;
+  padding: 8px 12px;
+  font-size: 12px;
+}
+/* The current image on the edit form, with its Remove button. */
+.subject-form__current {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+}
+/* Message at the top of a dark page (e.g. Home after deleting a file). */
+.page-notice {
+  color: #8fd18a;
+  border: 1px solid var(--green);
+  border-left-width: 4px;
+  background: rgba(92, 122, 79, 0.12);
+  border-radius: 4px;
+  padding: 10px 14px;
+  margin: 0 0 20px;
+}
+
 /* ---------- Addenda (Addenda.jsx, AddendumForm.jsx) ---------- */
 .addendum__byline {
   font-family: var(--mono);

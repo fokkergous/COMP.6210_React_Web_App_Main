@@ -1,19 +1,31 @@
-import { useParams, Link } from 'react-router-dom';
+import { useState } from 'react';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useSubject } from '../hooks/useSubject';
 import { useSubjects } from '../context/SubjectsContext';
+import { useAuth } from '../context/AuthContext';
+import { canManageSubject, deleteSubject } from '../lib/subjectWrites';
 import Redacted from '../components/Redacted';
 import SubjectImage from '../components/SubjectImage';
 import FileStatus from '../components/FileStatus';
 import Addenda from '../components/Addenda';
+import ConfirmDialog from '../components/ConfirmDialog';
 import NotFound from './NotFound';
 
 // Render the detailed dossier for a single SCP entry based on the URL `id`
 // (the subject's slug, e.g. /scp-002). The full file is fetched from
 // Supabase; optional sections are only shown when the subject has them.
+// The subject's owner (or an admin) also gets Edit and Delete buttons.
 function ScpDetail() {
   const { id } = useParams();
   const { subject: entry, loading, error, reload, refresh } = useSubject(id);
-  const { subjects } = useSubjects();
+  const { subjects, reload: reloadList } = useSubjects();
+  const { user, role } = useAuth();
+  const navigate = useNavigate();
+
+  // Delete flow: confirmation dialog open, request in progress, failure message.
+  const [confirmingDelete, setConfirmingDelete] = useState(false);
+  const [deleting, setDeleting] = useState(false);
+  const [deleteError, setDeleteError] = useState('');
 
   if (loading) {
     return <FileStatus type="loading" message={`Retrieving file ${id.toUpperCase()}…`} />;
@@ -39,11 +51,52 @@ function ScpDetail() {
   const prev = hasPager && subjects[(index - 1 + subjects.length) % subjects.length];
   const next = hasPager && subjects[(index + 1) % subjects.length];
 
+  // Same rule as the database: the owning editor or an admin.
+  const canManage = canManageSubject(user, role, entry.ownerId);
+
+  async function handleDelete() {
+    setDeleting(true);
+    setDeleteError('');
+    try {
+      await deleteSubject(entry);
+      // Remove it from Home and the File index, then go Home with a message.
+      reloadList();
+      navigate('/', { state: { notice: `${entry.item} has been deleted.` } });
+    } catch (err) {
+      setDeleteError(err.message);
+      setDeleting(false);
+      setConfirmingDelete(false);
+    }
+  }
+
   return (
     <article className="dossier">
-      <Link to="/" className="dossier__back">
-        ← Back to index
-      </Link>
+      <div className="dossier__topbar">
+        <Link to="/" className="dossier__back">
+          ← Back to index
+        </Link>
+
+        {canManage && (
+          <div className="dossier__actions">
+            <Link to={`/${entry.id}/edit`} className="form-button form-button--secondary">
+              Edit file
+            </Link>
+            <button
+              type="button"
+              className="form-button form-button--danger"
+              onClick={() => setConfirmingDelete(true)}
+            >
+              Delete file
+            </button>
+          </div>
+        )}
+      </div>
+
+      {deleteError && (
+        <p className="form-message form-message--error" role="alert">
+          {deleteError}
+        </p>
+      )}
 
       <header className="dossier__header">
         <div className="dossier__heading">
@@ -138,6 +191,16 @@ function ScpDetail() {
           </Link>
         </nav>
       )}
+
+      <ConfirmDialog
+        open={confirmingDelete}
+        title={`Delete ${entry.item}?`}
+        message="This permanently removes the file, every section and all of its addenda. It cannot be undone."
+        confirmLabel="Delete file"
+        busy={deleting}
+        onConfirm={handleDelete}
+        onCancel={() => setConfirmingDelete(false)}
+      />
     </article>
   );
 }

@@ -5,17 +5,22 @@ import { ITEM_PATTERN, MAX_IMAGE_BYTES, SUBJECT_LIMITS } from '../lib/subjectWri
 
 // The form for a whole subject file: identification, image, the two required
 // sections and the optional sections. It only collects and checks the values;
-// saving is done by the page that uses it, through onSubmit.
+// saving is done by the page that uses it, through onSubmit. Used both to
+// create a subject (NewSubject.jsx) and to edit one (EditSubject.jsx).
 //
-//   initialValues  starting values (EMPTY_SUBJECT for a new file; an existing
-//                  subject's values when editing)
-//   objectClasses  [{ id, name }] for the class drop-down
-//   submitLabel    text of the save button
-//   onSubmit(values, imageFile)  async; throw an Error to show its message
+//   initialValues     starting values (EMPTY_SUBJECT for a new file; an
+//                     existing subject's values when editing)
+//   existingImageUrl  the subject's current image when editing, else null
+//   objectClasses     [{ id, name }] for the class drop-down
+//   submitLabel       text of the save button
+//   onSubmit(values, image)  async; image is { file, remove }; throw an
+//                            Error to show its message
 //   onCancel()
-function SubjectForm({ initialValues, objectClasses, submitLabel, onSubmit, onCancel }) {
+function SubjectForm({ initialValues, existingImageUrl = null, objectClasses, submitLabel, onSubmit, onCancel }) {
   const [values, setValues] = useState(initialValues);
   const [imageFile, setImageFile] = useState(null);
+  // Editing only: true when the user chose to remove the current image.
+  const [removeImage, setRemoveImage] = useState(false);
   const [previewUrl, setPreviewUrl] = useState(null);
   const [problems, setProblems] = useState([]);
   const [saving, setSaving] = useState(false);
@@ -39,7 +44,12 @@ function SubjectForm({ initialValues, objectClasses, submitLabel, onSubmit, onCa
 
   function handleImageChange(event) {
     setImageFile(event.target.files[0] ?? null);
+    // Choosing a new image replaces the current one rather than removing it.
+    setRemoveImage(false);
   }
+
+  // Which image the subject will have after saving.
+  const keepsCurrentImage = existingImageUrl && !imageFile && !removeImage;
 
   async function handleSubmit(event) {
     // Stop the browser reloading the page; React handles the form instead.
@@ -52,7 +62,7 @@ function SubjectForm({ initialValues, objectClasses, submitLabel, onSubmit, onCa
 
     setSaving(true);
     try {
-      await onSubmit(cleaned, imageFile);
+      await onSubmit(cleaned, { file: imageFile, remove: removeImage });
       // On success the page navigates away, so there is nothing to reset.
     } catch (err) {
       setProblems([err.message]);
@@ -120,8 +130,26 @@ function SubjectForm({ initialValues, objectClasses, submitLabel, onSubmit, onCa
           placeholder.
         </p>
 
+        {/* Editing: show the current image with a way to remove it. */}
+        {keepsCurrentImage && (
+          <div className="subject-form__current">
+            <img src={existingImageUrl} alt="Current image" className="subject-form__preview" />
+            <button type="button" className="text-button text-button--danger" onClick={() => setRemoveImage(true)}>
+              Remove current image
+            </button>
+          </div>
+        )}
+        {existingImageUrl && removeImage && (
+          <p className="form-hint">
+            The current image will be removed when you save.{' '}
+            <button type="button" className="text-button" onClick={() => setRemoveImage(false)}>
+              Undo
+            </button>
+          </p>
+        )}
+
         <div className="form-field">
-          <label htmlFor="subject-image">Image file</label>
+          <label htmlFor="subject-image">{existingImageUrl ? 'Replace with a new image' : 'Image file'}</label>
           <input id="subject-image" type="file" accept="image/*" onChange={handleImageChange} />
         </div>
         {previewUrl && <img src={previewUrl} alt="Preview of the chosen image" className="subject-form__preview" />}

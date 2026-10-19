@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { useSubjects } from '../context/SubjectsContext';
 import { useAuth } from '../context/AuthContext';
 import SubjectImage from '../components/SubjectImage';
@@ -12,8 +12,18 @@ function Home() {
   // Only editors and admins can create files (matches the database rules).
   const canCreate = role === 'editor' || role === 'admin';
 
+  // A message passed by the page that sent the user here, e.g. after
+  // deleting a file: navigate('/', { state: { notice: 'SCP-022 has been deleted.' } })
+  const notice = useLocation().state?.notice;
+
   return (
     <>
+      {notice && (
+        <p className="page-notice" role="status">
+          {notice}
+        </p>
+      )}
+
       <section className="hero">
         <p className="eyebrow">Field Catalogue — Restricted Access</p>
         <h1>Anomalous Item Index</h1>

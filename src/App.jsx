@@ -7,6 +7,7 @@ import Footer from './components/Footer';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import NewSubject from './pages/NewSubject';
+import EditSubject from './pages/EditSubject';
 import ScpDetail from './pages/ScpDetail';
 import NotFound from './pages/NotFound';
 import './App.css';
@@ -30,6 +31,7 @@ function App() {
               <Route path="/login" element={<Login />} />
               <Route path="/new" element={<NewSubject />} />
               <Route path="/:id" element={<ScpDetail />} />
+              <Route path="/:id/edit" element={<EditSubject />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </main>

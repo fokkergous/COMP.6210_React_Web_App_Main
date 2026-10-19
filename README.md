@@ -21,10 +21,11 @@ A React web app for browsing and managing a catalogue of SCP Foundation subjects
 - Sign-up with email verification, login and logout (Supabase Auth); the header shows the user's display name and role
 - Addenda: any logged-in user can file one on any subject; authors can edit and delete their own (admins can manage all), with a confirmation dialog before deleting. Each addendum shows its author and date
 - Create subjects (editors and admins): a full dossier form with every section, image upload to Supabase Storage and validation; a failed save is undone so no partial file is left behind
+- Edit and delete subjects (the owning editor or an admin): the same form pre-filled, item number changes (the URL follows), keep/replace/remove the image, and a confirmation dialog before deleting a file with all its sections and addenda
 
 **Planned:**
 - Images for SCP-007 to SCP-021 (they currently show the placeholder)
-- Edit and delete subjects (owner or admin)
+- Cloud deployment (Netlify)
 
 ## Tech stack
 | Layer | Technology |
@@ -50,13 +51,13 @@ Every permission is enforced in the database by Row Level Security policies, not
 src/
   components/   Shared UI (Header, Nav, Footer, Redacted, DbStatus, AccountStatus,
                 SubjectImage, FileStatus, Addenda, AddendumForm, ConfirmDialog,
-                SubjectForm, ParagraphListField, ChronologyField)
+                SubjectForm, ParagraphListField, ChronologyField, ClearanceRequired)
   context/      State shared app-wide: login (AuthProvider, useAuth) and the
                 catalogue list (SubjectsProvider, useSubjects)
   hooks/        useSubject: loads one full subject for the dossier page
   lib/          Supabase client (supabase.js), subject queries (subjects.js),
                 subject writes (subjectWrites.js) and addendum writes (addenda.js)
-  pages/        Route pages (Home, ScpDetail, NewSubject, Login, NotFound)
+  pages/        Route pages (Home, ScpDetail, NewSubject, EditSubject, Login, NotFound)
   assets/       Logo and placeholder image (subject images live in Supabase Storage)
 supabase/
   schema.sql    Database tables, RLS policies, triggers, storage bucket
@@ -96,6 +97,7 @@ Each version is tagged in git (`git tag`), so the project can be restored to any
 | v0.6.0 | 20 subjects: SCP-007 to SCP-021 added to the seed; navigation reworked into a drop-down file index |
 | v0.7.0 | Addenda: add, edit and delete your own (admins: all), author and date bylines, delete confirmation dialog; first writes to Supabase, enforced by RLS |
 | v0.8.0 | Create subjects: `/new` form for editors and admins (all sections, image upload, validation), table-by-table save with cleanup on failure |
+| v0.9.0 | Edit and delete subjects (owner or admin): pre-filled form, editable item number, image keep/replace/remove, sections replaced insert-then-delete; full CRUD complete |
 
 ## Credits
 SCP Foundation content is adapted from the [SCP Wiki](https://scp-wiki.wikidot.com) and its authors, used under the [Creative Commons Attribution-ShareAlike 3.0](https://creativecommons.org/licenses/by-sa/3.0/) licence. Subject text in this project has been rewritten and shortened; SCP-014 is an original subject.
