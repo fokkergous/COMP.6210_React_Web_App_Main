@@ -53,6 +53,18 @@ export async function fetchSubject(slug) {
   return data ? toDossier(data) : null;
 }
 
+// Fetch the object classes (Safe, Euclid, Keter, ...) for the class
+// drop-down on the subject form, in the order they were added.
+export async function fetchObjectClasses() {
+  const { data, error } = await supabase
+    .from('object_classes')
+    .select('id, name')
+    .order('id');
+
+  if (error) throw error;
+  return data;
+}
+
 // ---------------------------------------------------------------------
 // Converting database rows into the shape the pages use
 // ---------------------------------------------------------------------

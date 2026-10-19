@@ -646,7 +646,8 @@
 }
 /* Typed-form look: a ruled line rather than a box. */
 .form-field input,
-.form-field textarea {
+.form-field textarea,
+.form-field select {
   font-family: var(--mono);
   font-size: 16px; /* 16px stops iOS zooming in on focus */
   color: #2b2416;
@@ -657,7 +658,8 @@
   padding: 10px 8px;
 }
 .form-field input:focus,
-.form-field textarea:focus {
+.form-field textarea:focus,
+.form-field select:focus {
   outline: none;
   border-bottom-color: var(--accent);
   background: rgba(255, 255, 255, 0.6);
@@ -668,6 +670,8 @@
 }
 
 .form-button {
+  display: inline-block; /* also used on <Link>s */
+  text-decoration: none;
   margin-top: 6px;
   background: var(--accent);
   color: var(--heading);
@@ -755,6 +759,102 @@
 }
 .text-button--danger {
   color: var(--red);
+}
+
+/* ---------- Subject form (SubjectForm.jsx, NewSubject.jsx) ----------
+   Laid out like the dossier it creates: each fieldset is a section with a
+   ruled, upper-case heading. */
+.subject-form {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.form-section {
+  border: none;
+  margin: 0 0 18px;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  align-items: flex-start;
+}
+.form-section > .form-field,
+.form-section > .form-row,
+.form-section > .form-hint {
+  align-self: stretch;
+}
+.form-section legend {
+  width: 100%;
+  font-family: var(--mono);
+  font-size: 15px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #2b2416;
+  border-bottom: 1px solid var(--line-paper);
+  padding-bottom: 8px;
+  margin-bottom: 12px;
+}
+.form-required {
+  color: var(--red);
+  font-size: 12px;
+}
+/* Item number and class side by side on wider screens. */
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
+}
+@media (min-width: 640px) {
+  .form-row {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+.subject-form__preview {
+  max-height: 220px;
+  border-radius: 4px;
+  filter: sepia(0.15) contrast(1.05);
+}
+.chronology-field {
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-left: 12px;
+  border-left: 2px solid var(--line-paper);
+}
+/* Optional sections fold away inside a <details> panel. */
+.form-optional {
+  border-top: 1px dashed var(--line-paper);
+  border-bottom: 1px dashed var(--line-paper);
+  padding: 12px 0;
+  margin-bottom: 18px;
+}
+.form-optional summary {
+  font-family: var(--mono);
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #5a5138;
+  cursor: pointer;
+}
+.form-optional[open] summary {
+  margin-bottom: 18px;
+}
+.form-message ul {
+  margin: 6px 0 0;
+  padding-left: 20px;
+}
+.form-message p {
+  margin: 0;
+}
+.form-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+/* "+ New file" under the Home page introduction. */
+.hero__action {
+  margin-top: 18px;
 }
 
 /* ---------- Addenda (Addenda.jsx, AddendumForm.jsx) ---------- */

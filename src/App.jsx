@@ -6,6 +6,7 @@ import Nav from './components/Nav';
 import Footer from './components/Footer';
 import Home from './pages/Home';
 import Login from './pages/Login';
+import NewSubject from './pages/NewSubject';
 import ScpDetail from './pages/ScpDetail';
 import NotFound from './pages/NotFound';
 import './App.css';
@@ -25,8 +26,9 @@ function App() {
             <Routes>
               <Route path="/" element={<Home />} />
               {/* React Router ranks fixed paths above parameters, so /login
-                  is matched here rather than as an SCP id by /:id. */}
+                  and /new are matched here rather than as SCP ids by /:id. */}
               <Route path="/login" element={<Login />} />
+              <Route path="/new" element={<NewSubject />} />
               <Route path="/:id" element={<ScpDetail />} />
               <Route path="*" element={<NotFound />} />
             </Routes>

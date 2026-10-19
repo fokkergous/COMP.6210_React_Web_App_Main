@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { useSubjects } from '../context/SubjectsContext';
+import { useAuth } from '../context/AuthContext';
 import SubjectImage from '../components/SubjectImage';
 import FileStatus from '../components/FileStatus';
 
@@ -7,6 +8,9 @@ import FileStatus from '../components/FileStatus';
 // The cards come from Supabase via the shared subjects list.
 function Home() {
   const { subjects, loading, error, reload } = useSubjects();
+  const { role } = useAuth();
+  // Only editors and admins can create files (matches the database rules).
+  const canCreate = role === 'editor' || role === 'admin';
 
   return (
     <>
@@ -17,6 +21,11 @@ function Home() {
           A modernised, record of contained subjects, entities, and objects.
           Select a file below or in the Navbar to open its full containment dossier.
         </p>
+        {canCreate && (
+          <Link to="/new" className="form-button hero__action">
+            + New file
+          </Link>
+        )}
       </section>
 
       {/* Show exactly one of: loading, error, empty catalogue, or the cards. */}
