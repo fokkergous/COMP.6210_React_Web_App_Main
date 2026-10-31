@@ -5,9 +5,9 @@ Gustav Gous · Student ID 30041802 · Toi Ohomai
 
 A React web app for browsing and managing a catalogue of SCP Foundation subjects. The data is stored in a cloud database (Supabase) and read and written through its REST API. Logged-in users have role-based permissions enforced by Row Level Security.
 
-> **Status:** in development. All subject data and images are read from Supabase; editing features are in progress (see [Version history](#version-history)).
+> **Status:** feature complete and deployed. Final testing and polish are in progress (see [Version history](#version-history)).
 
-**Live site:** _coming soon (Netlify)_
+**Live site:** https://comp6210reactapp.netlify.app/
 
 ## Features
 **Current:**
@@ -25,7 +25,6 @@ A React web app for browsing and managing a catalogue of SCP Foundation subjects
 
 **Planned:**
 - Images for SCP-007 to SCP-021 (they currently show the placeholder)
-- Cloud deployment (Netlify)
 
 ## Tech stack
 | Layer | Technology |
@@ -98,6 +97,7 @@ Each version is tagged in git (`git tag`), so the project can be restored to any
 | v0.7.0 | Addenda: add, edit and delete your own (admins: all), author and date bylines, delete confirmation dialog; first writes to Supabase, enforced by RLS |
 | v0.8.0 | Create subjects: `/new` form for editors and admins (all sections, image upload, validation), table-by-table save with cleanup on failure |
 | v0.9.0 | Edit and delete subjects (owner or admin): pre-filled form, editable item number, image keep/replace/remove, sections replaced insert-then-delete; full CRUD complete |
+| v1.0.0 | Release: deployed to Netlify (https://comp6210reactapp.netlify.app/) and tested live for every role; comment pass |
 
 ## Credits
 SCP Foundation content is adapted from the [SCP Wiki](https://scp-wiki.wikidot.com) and its authors, used under the [Creative Commons Attribution-ShareAlike 3.0](https://creativecommons.org/licenses/by-sa/3.0/) licence. Subject text in this project has been rewritten and shortened; SCP-014 is an original subject.

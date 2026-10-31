@@ -39,7 +39,7 @@ export async function fetchSubjectList() {
 }
 
 // Fetch one full subject by its URL slug (e.g. 'scp-002').
-// Returns null if no subject has that slug; throws if the request fails.
+// Returns null if no subject has that slug, throws if the request fails.
 export async function fetchSubject(slug) {
   const { data, error } = await supabase
     .from('scp_subjects')
@@ -65,11 +65,9 @@ export async function fetchObjectClasses() {
   return data;
 }
 
-// ---------------------------------------------------------------------
 // Converting database rows into the shape the pages use
-// ---------------------------------------------------------------------
 
-// A subject list row -> a card / nav link.
+// A subject list row = a card / nav link.
 function toCard(row) {
   return {
     id: row.slug, // the URL part, e.g. /scp-002
@@ -82,7 +80,7 @@ function toCard(row) {
   };
 }
 
-// A full subject row -> the dossier object ScpDetail.jsx renders.
+// A full subject row = the dossier object ScpDetail.jsx renders.
 // Optional sections become null when empty, so the page skips them.
 function toDossier(row) {
   const appendix = oneOrNull(row.appendices);
@@ -141,7 +139,7 @@ function sortByPosition(rows = []) {
   return [...rows].sort((a, b) => a.position - b.position);
 }
 
-// Ordered rows -> just their paragraph text.
+// Ordered rows = just their paragraph text.
 function bodies(rows) {
   return sortByPosition(rows).map((row) => row.body);
 }
@@ -158,7 +156,7 @@ function oneOrNull(value) {
   return value ?? null;
 }
 
-// '1949-07-02' (how Postgres sends a date) -> '02/07/1949' (DD/MM/YYYY).
+// '1949-07-02' (how Postgres sends a date) = '02/07/1949' (DD/MM/YYYY).
 // Done by splitting the text rather than with new Date(), which reads the
 // value as midnight UTC and can show the previous day in some time zones.
 export function formatDate(isoDate) {

@@ -61,7 +61,7 @@ function AuthProvider({ children }) {
     };
   }, [userId]);
 
-  // Log in with email and password. Returns { error } (null on success);
+  // Log in with email and password. Returns { error } (null on success)
   // the session listener above updates the state.
   async function signIn(email, password) {
     const { error } = await supabase.auth.signInWithPassword({ email, password });

@@ -761,7 +761,7 @@
   color: var(--red);
 }
 
-/* ---------- Subject form (SubjectForm.jsx, NewSubject.jsx) ----------
+/* ---------- Subject form (SubjectForm.jsx, NewSubject.jsx, EditSubject.jsx) ----------
    Laid out like the dossier it creates: each fieldset is a section with a
    ruled, upper-case heading. */
 .subject-form {

@@ -4,8 +4,10 @@ import { useAuth } from '../context/AuthContext';
 import SubjectImage from '../components/SubjectImage';
 import FileStatus from '../components/FileStatus';
 
-// Render the homepage: hero section and a grid of SCP entry cards.
-// The cards come from Supabase via the shared subjects list.
+// Render the homepage: an optional notice (e.g. "SCP-022 has been deleted."),
+// the hero section with a "+ New file" button for editors and admins, and a
+// grid of SCP entry cards. The cards come from Supabase via the shared
+// subjects list.
 function Home() {
   const { subjects, loading, error, reload } = useSubjects();
   const { role } = useAuth();

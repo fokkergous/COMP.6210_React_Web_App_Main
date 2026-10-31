@@ -78,9 +78,7 @@ export function dossierToFormValues(entry) {
   };
 }
 
-// ---------------------------------------------------------------------
 // Create
-// ---------------------------------------------------------------------
 
 // Create a subject with all its sections.
 //   values     cleaned form values (see SubjectForm.jsx)
@@ -133,9 +131,7 @@ export async function createSubject(values, imageFile, userId) {
   }
 }
 
-// ---------------------------------------------------------------------
 // Edit
-// ---------------------------------------------------------------------
 
 // Save changes to an existing subject.
 //   subject  the loaded dossier being edited (needs dbId and image)
@@ -203,9 +199,7 @@ export async function updateSubject(subject, values, image, userId) {
   }
 }
 
-// ---------------------------------------------------------------------
 // Delete
-// ---------------------------------------------------------------------
 
 // Delete a subject. ON DELETE CASCADE removes its sections and addenda;
 // then its uploaded image is removed from Storage (seed images are kept).
@@ -222,9 +216,7 @@ export async function deleteSubject(subject) {
   await removeStoredImage(subject.image);
 }
 
-// ---------------------------------------------------------------------
 // Sections
-// ---------------------------------------------------------------------
 
 // Save every section of a subject. For a new subject the rows are simply
 // inserted. When editing (replace: true) each section's old rows are swapped
@@ -324,9 +316,7 @@ async function deleteWhere(table, column, value) {
   if (error) throw error;
 }
 
-// ---------------------------------------------------------------------
 // Images
-// ---------------------------------------------------------------------
 
 // Upload an image into the user's own folder of the scp-images bucket and
 // return its storage path and public URL. The storage RLS policy only
