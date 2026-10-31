@@ -12,13 +12,13 @@ A React web app for browsing and managing a catalogue of SCP Foundation subjects
 ## Features
 **Current:**
 - Catalogue of 20 subjects (SCP-002 to SCP-021): index of subject cards, plus a detailed dossier page for each subject, all read from Supabase
-- Navigation bar with a drop-down file index that stays one line however many subjects there are
+- Slide-out side bar (☰ Menu) holding all navigation: Home, "+ New file" (editors and admins), a collapsible file index, and the account area (log in, or name, role and log out) pinned to the bottom. Redesigned in v1.1.0 from user-testing feedback
 - Loading and error states (with retry) for every database request
 - Placeholder image when a subject's image is missing or fails to load
 - Dates shown as DD/MM/YYYY
 - Redaction styling for `[DATA REDACTED]` text
 - Live database connection status in the header (reads the `object_classes` table from Supabase)
-- Sign-up with email verification, login and logout (Supabase Auth); the header shows the user's display name and role
+- Sign-up with email verification, login and logout (Supabase Auth); the side bar shows the user's display name and role
 - Addenda: any logged-in user can file one on any subject; authors can edit and delete their own (admins can manage all), with a confirmation dialog before deleting. Each addendum shows its author and date
 - Create subjects (editors and admins): a full dossier form with every section, image upload to Supabase Storage and validation; a failed save is undone so no partial file is left behind
 - Edit and delete subjects (the owning editor or an admin): the same form pre-filled, item number changes (the URL follows), keep/replace/remove the image, and a confirmation dialog before deleting a file with all its sections and addenda
@@ -48,7 +48,7 @@ Every permission is enforced in the database by Row Level Security policies, not
 ## Project structure
 ```
 src/
-  components/   Shared UI (Header, Nav, Footer, Redacted, DbStatus, AccountStatus,
+  components/   Shared UI (Header, Sidebar, Footer, Redacted, DbStatus,
                 SubjectImage, FileStatus, Addenda, AddendumForm, ConfirmDialog,
                 SubjectForm, ParagraphListField, ChronologyField, ClearanceRequired)
   context/      State shared app-wide: login (AuthProvider, useAuth) and the
@@ -98,6 +98,7 @@ Each version is tagged in git (`git tag`), so the project can be restored to any
 | v0.8.0 | Create subjects: `/new` form for editors and admins (all sections, image upload, validation), table-by-table save with cleanup on failure |
 | v0.9.0 | Edit and delete subjects (owner or admin): pre-filled form, editable item number, image keep/replace/remove, sections replaced insert-then-delete; full CRUD complete |
 | v1.0.0 | Release: deployed to Netlify (https://comp6210reactapp.netlify.app/) and tested live for every role; comment pass |
+| v1.1.0 | User-testing feedback applied: navigation bar and header account buttons replaced by a ☰ slide-out side bar (Home, New file, collapsible file index) with the account area at the bottom |
 
 ## Credits
 SCP Foundation content is adapted from the [SCP Wiki](https://scp-wiki.wikidot.com) and its authors, used under the [Creative Commons Attribution-ShareAlike 3.0](https://creativecommons.org/licenses/by-sa/3.0/) licence. Subject text in this project has been rewritten and shortened; SCP-014 is an original subject.
