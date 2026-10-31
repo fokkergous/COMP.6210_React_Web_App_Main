@@ -1,7 +1,7 @@
 import { Link, useLocation } from 'react-router-dom';
 import { useSubjects } from '../context/SubjectsContext';
 import { useAuth } from '../context/AuthContext';
-import SubjectImage from '../components/SubjectImage';
+import SubjectCard from '../components/SubjectCard';
 import FileStatus from '../components/FileStatus';
 
 // Render the homepage: an optional notice (e.g. "SCP-022 has been deleted."),
@@ -31,7 +31,7 @@ function Home() {
         <h1>Anomalous Item Index</h1>
         <p className="hero__lede">
           A modernised, record of contained subjects, entities, and objects.
-          Select a file below or in the Navbar to open its full containment dossier.
+          Select a file below, search for one above, or browse the file index in the sidebar menu.
         </p>
         {canCreate && (
           <Link to="/new" className="form-button hero__action">
@@ -54,16 +54,7 @@ function Home() {
       ) : (
         <section className="grid" aria-label="Catalogue entries">
           {subjects.map((entry) => (
-            <Link to={`/${entry.id}`} className="card" key={entry.id}>
-              <div className="card__image-wrap">
-                <SubjectImage src={entry.image} alt={entry.imageAlt} className="card__image" />
-              </div>
-              <div className="card__body">
-                <h2 className="card__item">{entry.item}</h2>
-                <p className="card__summary">{entry.summary}</p>
-                <span className="card__cta">Open file →</span>
-              </div>
-            </Link>
+            <SubjectCard entry={entry} key={entry.id} />
           ))}
         </section>
       )}

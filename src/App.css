@@ -77,6 +77,64 @@
   grid-column: 2;
 }
 
+/* ---------- Site search (SearchBox.jsx) ----------
+   Right-hand column of the sticky header row. On phones it moves onto its
+   own full-width line under the menu button and brand. */
+.site-search {
+  grid-column: 3;
+  justify-self: end;
+  display: flex;
+  width: 100%;
+  max-width: 260px;
+}
+.site-search input {
+  flex: 1;
+  min-width: 0;
+  font-family: var(--mono);
+  font-size: 14px;
+  color: var(--heading);
+  background: var(--ink);
+  border: 1px solid var(--line-paper);
+  border-right: none;
+  border-radius: 4px 0 0 4px;
+  padding: 8px 10px;
+}
+.site-search input::placeholder {
+  color: var(--muted);
+}
+.site-search input:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+.site-search__button {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  color: var(--heading);
+  background: var(--accent);
+  border: none;
+  border-radius: 0 4px 4px 0;
+  cursor: pointer;
+}
+.site-search__button:hover,
+.site-search__button:focus-visible {
+  background: var(--accent-2);
+}
+@media (max-width: 640px) {
+  .site-header__row {
+    grid-template-columns: auto 1fr;
+    row-gap: 8px;
+  }
+  .site-header__row .brand {
+    justify-self: start;
+    margin: 0;
+  }
+  .site-search {
+    grid-column: 1 / -1;
+    max-width: none;
+  }
+}
+
 /* ☰ Menu button (Header.jsx) */
 .menu-toggle {
   grid-column: 1;
@@ -278,6 +336,30 @@
 }
 
 /* The expanded file index: two columns of file links. */
+/* The expanded File index: a filter box, then the list of files. */
+.sidebar__index-panel[hidden] {
+  display: none;
+}
+.sidebar__filter {
+  width: calc(100% - 12px);
+  margin: 4px 0 6px 12px;
+  font-family: var(--mono);
+  font-size: 13px;
+  color: var(--heading);
+  background: var(--ink);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: 6px 8px;
+}
+.sidebar__filter:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+.sidebar__empty {
+  margin: 4px 0 8px 12px;
+  font-size: 14px;
+  color: var(--muted);
+}
 .sidebar__index {
   list-style: none;
   margin: 2px 0 8px;
@@ -367,6 +449,13 @@
   width: 100%;
   margin-top: 0;
   text-align: center;
+}
+
+/* ---------- Search results (Search.jsx) ---------- */
+.search__more {
+  display: flex;
+  justify-content: center;
+  margin-top: 28px;
 }
 
 /* ---------- Hero ---------- */

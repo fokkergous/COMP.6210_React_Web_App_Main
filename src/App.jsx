@@ -7,6 +7,7 @@ import Home from './pages/Home';
 import Login from './pages/Login';
 import NewSubject from './pages/NewSubject';
 import EditSubject from './pages/EditSubject';
+import Search from './pages/Search';
 import ScpDetail from './pages/ScpDetail';
 import NotFound from './pages/NotFound';
 import './App.css';
@@ -28,6 +29,8 @@ function App() {
                   and /new are matched here rather than as SCP ids by /:id. */}
               <Route path="/login" element={<Login />} />
               <Route path="/new" element={<NewSubject />} />
+              {/* /search is also a fixed path, so it is never taken for an SCP id. */}
+              <Route path="/search" element={<Search />} />
               <Route path="/:id" element={<ScpDetail />} />
               <Route path="/:id/edit" element={<EditSubject />} />
               <Route path="*" element={<NotFound />} />

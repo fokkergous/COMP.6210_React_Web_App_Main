@@ -13,6 +13,7 @@ A React web app for browsing and managing a catalogue of SCP Foundation subjects
 **Current:**
 - Catalogue of 20 subjects (SCP-002 to SCP-021): index of subject cards, plus a detailed dossier page for each subject, all read from Supabase
 - Slide-out side bar (☰ Menu) holding all navigation: Home, "+ New file" (editors and admins), a collapsible file index, and the account area (log in, or name, role and log out) pinned to the bottom. Redesigned in v1.1.0 from user-testing feedback
+- Search (v1.2.0, from user-testing feedback): a search box in the header finds files by item number, summary text or object class. The search runs in the database and results load in pages, so it stays fast with thousands of files; results live at `/search?q=…` (bookmarkable). The side bar's file index also has a filter box
 - Loading and error states (with retry) for every database request
 - Placeholder image when a subject's image is missing or fails to load
 - Dates shown as DD/MM/YYYY
@@ -50,13 +51,14 @@ Every permission is enforced in the database by Row Level Security policies, not
 src/
   components/   Shared UI (Header, Sidebar, Footer, Redacted, DbStatus,
                 SubjectImage, FileStatus, Addenda, AddendumForm, ConfirmDialog,
-                SubjectForm, ParagraphListField, ChronologyField, ClearanceRequired)
+                SubjectForm, ParagraphListField, ChronologyField, ClearanceRequired,
+                SearchBox, SubjectCard)
   context/      State shared app-wide: login (AuthProvider, useAuth) and the
                 catalogue list (SubjectsProvider, useSubjects)
   hooks/        useSubject: loads one full subject for the dossier page
-  lib/          Supabase client (supabase.js), subject queries (subjects.js),
+  lib/          Supabase client (supabase.js), subject queries and search (subjects.js),
                 subject writes (subjectWrites.js) and addendum writes (addenda.js)
-  pages/        Route pages (Home, ScpDetail, NewSubject, EditSubject, Login, NotFound)
+  pages/        Route pages (Home, ScpDetail, NewSubject, EditSubject, Search, Login, NotFound)
   assets/       Logo and placeholder image (subject images live in Supabase Storage)
 supabase/
   schema.sql    Database tables, RLS policies, triggers, storage bucket
@@ -99,6 +101,7 @@ Each version is tagged in git (`git tag`), so the project can be restored to any
 | v0.9.0 | Edit and delete subjects (owner or admin): pre-filled form, editable item number, image keep/replace/remove, sections replaced insert-then-delete; full CRUD complete |
 | v1.0.0 | Release: deployed to Netlify (https://comp6210reactapp.netlify.app/) and tested live for every role; comment pass |
 | v1.1.0 | User-testing feedback applied: navigation bar and header account buttons replaced by a ☰ slide-out side bar (Home, New file, collapsible file index) with the account area at the bottom |
+| v1.2.0 | User-testing feedback applied: header search box and `/search` results page (item number, summary, class; database-side, paged with Load more), file index filter in the side bar, shared SubjectCard |
 
 ## Credits
 SCP Foundation content is adapted from the [SCP Wiki](https://scp-wiki.wikidot.com) and its authors, used under the [Creative Commons Attribution-ShareAlike 3.0](https://creativecommons.org/licenses/by-sa/3.0/) licence. Subject text in this project has been rewritten and shortened; SCP-014 is an original subject.

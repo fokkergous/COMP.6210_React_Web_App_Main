@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import logo from '../assets/scp/scp-logo.png';
 import DbStatus from './DbStatus';
 import Sidebar from './Sidebar';
+import SearchBox from './SearchBox';
 
 // Render the site header: the clearance bar (with the live database
 // connection status), then a sticky row with the ☰ menu button and the
@@ -59,6 +60,9 @@ function Header() {
             <span className="brand__tag">Secure · Contain · Protect</span>
           </span>
         </Link>
+
+        {/* Site-wide search (v1.2.0): right-hand side, own line on phones. */}
+        <SearchBox />
       </div>
 
       <Sidebar open={menuOpen} onClose={closeMenu} />

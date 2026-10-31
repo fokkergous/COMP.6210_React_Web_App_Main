@@ -65,6 +65,52 @@ export async function fetchObjectClasses() {
   return data;
 }
 
+// Search the catalogue (v1.2.0). The search runs in the database, so only
+// the matching rows are downloaded: the app stays fast with thousands of
+// files. A subject matches when the text appears (ignoring case) in its item
+// number ("017" finds SCP-017), its summary, or its object class name
+// ("keter" finds every Keter subject).
+//
+//   query   the text typed by the user
+//   offset  how many results to skip (for "Load more")
+//   limit   how many results to return at once
+// Returns { subjects, total }: one page of cards, and how many match in all.
+export async function searchSubjects(query, { offset = 0, limit = 24 } = {}) {
+  const term = cleanSearchTerm(query);
+  if (!term) return { subjects: [], total: 0 };
+
+  // The class names live in the object_classes lookup table, so first find
+  // the ids of any classes whose name contains the term. (That table is tiny.)
+  const classes = await fetchObjectClasses();
+  const classIds = classes
+    .filter((oc) => oc.name.toLowerCase().includes(term.toLowerCase()))
+    .map((oc) => oc.id);
+
+  // or() combines the conditions: item OR summary OR class matches.
+  // ilike is SQL's case-insensitive LIKE; % means "any text" either side.
+  const conditions = [`item.ilike."%${term}%"`, `summary.ilike."%${term}%"`];
+  if (classIds.length > 0) conditions.push(`object_class_id.in.(${classIds.join(',')})`);
+
+  const { data, error, count } = await supabase
+    .from('scp_subjects')
+    // count: 'exact' also returns the total number of matches.
+    .select(LIST_COLUMNS, { count: 'exact' })
+    .or(conditions.join(','))
+    .order('item')
+    // range is inclusive at both ends: rows offset to offset + limit - 1.
+    .range(offset, offset + limit - 1);
+
+  if (error) throw error;
+  return { subjects: data.map(toCard), total: count ?? data.length };
+}
+
+// Characters such as commas, brackets and quotes have special meaning inside
+// the or() filter above, so they are replaced with spaces before searching.
+// This stops a search like "(test" breaking the query. Long input is cut short.
+function cleanSearchTerm(text) {
+  return text.replace(/[,()"*%\\]/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 100);
+}
+
 // Converting database rows into the shape the pages use
 
 // A subject list row = a card / nav link.

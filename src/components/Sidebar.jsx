@@ -25,6 +25,18 @@ function Sidebar({ open, onClose }) {
   // reopens, so it remembers the user's choice.
   const [indexOpen, setIndexOpen] = useState(false);
 
+  // Text typed in the File index filter box (v1.2.0). The index shows only
+  // files whose item number or summary contains it (ignoring case). This
+  // filters the list already loaded for the side bar; the header search box
+  // searches the whole database instead.
+  const [filter, setFilter] = useState('');
+  const filterText = filter.trim().toLowerCase();
+  const visibleSubjects = filterText
+    ? subjects.filter(
+        (s) => s.item.toLowerCase().includes(filterText) || s.summary.toLowerCase().includes(filterText)
+      )
+    : subjects;
+
   // Only editors and admins can create files (matches the database rules).
   const canCreate = role === 'editor' || role === 'admin';
 
@@ -108,16 +120,32 @@ function Sidebar({ open, onClose }) {
             </span>
           </button>
 
-          <ul id="sidebar-file-index" className="sidebar__index" hidden={!indexOpen}>
-            {subjects.map((entry) => (
-              <li key={entry.id}>
-                {/* NavLink highlights the file currently open. */}
-                <NavLink to={`/${entry.id}`} className="sidebar__file">
-                  {entry.item}
-                </NavLink>
-              </li>
-            ))}
-          </ul>
+          <div id="sidebar-file-index" className="sidebar__index-panel" hidden={!indexOpen}>
+            <label htmlFor="sidebar-filter" className="visually-hidden">
+              Filter the file index
+            </label>
+            <input
+              id="sidebar-filter"
+              type="search"
+              className="sidebar__filter"
+              placeholder="Filter files…"
+              value={filter}
+              onChange={(e) => setFilter(e.target.value)}
+            />
+
+            {visibleSubjects.length === 0 && <p className="sidebar__empty">No files match.</p>}
+
+            <ul className="sidebar__index">
+              {visibleSubjects.map((entry) => (
+                <li key={entry.id}>
+                  {/* NavLink highlights the file currently open. */}
+                  <NavLink to={`/${entry.id}`} className="sidebar__file">
+                    {entry.item}
+                  </NavLink>
+                </li>
+              ))}
+            </ul>
+          </div>
         </nav>
 
         {/* Account area, pinned to the bottom of the panel. Nothing shows
