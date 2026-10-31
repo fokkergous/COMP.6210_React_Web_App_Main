@@ -26,6 +26,7 @@ A React web app for browsing and managing a catalogue of SCP Foundation subjects
 
 **Planned:**
 - Images for SCP-007 to SCP-021 (they currently show the placeholder)
+- See [Future work](#future-work) for larger planned features
 
 ## Tech stack
 | Layer | Technology |
@@ -102,6 +103,21 @@ Each version is tagged in git (`git tag`), so the project can be restored to any
 | v1.0.0 | Release: deployed to Netlify (https://comp6210reactapp.netlify.app/) and tested live for every role; comment pass |
 | v1.1.0 | User-testing feedback applied: navigation bar and header account buttons replaced by a ☰ slide-out side bar (Home, New file, collapsible file index) with the account area at the bottom |
 | v1.2.0 | User-testing feedback applied: header search box and `/search` results page (item number, summary, class; database-side, paged with Load more), file index filter in the side bar, shared SubjectCard |
+
+## Future work
+### Semantic search with Weaviate
+The current search matches the exact text typed (item number, summary or class). The next planned step is **semantic search**: finding files by meaning rather than exact words. For example, *"something that spreads through touch"* would find SCP-021 even though those words don't appear in its file.
+
+Planned approach and points to settle:
+- **Vector database:** [Weaviate](https://weaviate.io) stores an *embedding* (a list of numbers representing meaning) for each subject's text and finds the closest matches to a search.
+- **Embeddings:** each subject's summary, description and containment text will be converted to vectors, either by one of Weaviate's built-in vectoriser modules or by an external embedding model.
+- **Keeping in sync:** creating, editing or deleting a subject in Supabase must also update Weaviate, so the two never disagree.
+- **A server-side function:** the Weaviate and embedding API keys are secret, so they can't be placed in the browser the way the Supabase publishable key is (that key is protected by Row Level Security). A small server function (a Supabase Edge Function or a Netlify Function) will sit between the React app and Weaviate. This will be the project's first server-side code.
+- **Alternative to compare:** Supabase's built-in **pgvector** extension can store vectors in the existing PostgreSQL database, which avoids running and syncing a second service.
+- **Exact search stays:** the current search will remain for exact lookups such as item numbers (`017`), with semantic results shown alongside it.
+
+### Other improvements
+- **Paging on the Home page:** Home currently loads every subject at once. Once the catalogue grows into the thousands, it will load them in pages, the way search results already do.
 
 ## Credits
 SCP Foundation content is adapted from the [SCP Wiki](https://scp-wiki.wikidot.com) and its authors, used under the [Creative Commons Attribution-ShareAlike 3.0](https://creativecommons.org/licenses/by-sa/3.0/) licence. Subject text in this project has been rewritten and shortened; SCP-014 is an original subject.
